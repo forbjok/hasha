@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use crate::{checksum_set::ChecksumSetBuilder, error::*, util};
 
-pub fn calculate(
+pub fn generate(
     path: PathBuf,
     output_file: Option<PathBuf>,
     root_path: Option<PathBuf>,

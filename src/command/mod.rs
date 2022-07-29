@@ -1,5 +1,5 @@
-mod calculate;
 mod diff;
+mod generate;
 
-pub use self::calculate::*;
 pub use self::diff::*;
+pub use self::generate::*;

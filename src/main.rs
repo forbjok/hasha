@@ -19,9 +19,9 @@ struct Opt {
 
 #[derive(Debug, Parser)]
 enum Command {
-    #[clap(about = "Calculate a checksum set")]
-    Calculate {
-        #[clap(help = "Path to calculate checksum set for")]
+    #[clap(about = "Generate a checksum set")]
+    Generate {
+        #[clap(help = "Path to generate checksum set for")]
         path: PathBuf,
         #[clap(long = "root-path", short = 'r', help = "Root path")]
         root_path: Option<PathBuf>,
@@ -47,11 +47,11 @@ fn main() {
     debug!("Debug logging enabled.");
 
     let cmd_result = match opt.command {
-        Command::Calculate {
+        Command::Generate {
             path,
             root_path,
             output_file,
-        } => command::calculate(path, output_file, root_path),
+        } => command::generate(path, output_file, root_path),
         Command::Diff { a, b } => command::diff(a, b),
     };
 
