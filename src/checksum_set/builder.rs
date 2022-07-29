@@ -55,11 +55,13 @@ impl ChecksumSetBuilder {
             // Make path relative, as we only want to match on the path
             // relative to the root.
             if let Ok(rel_path) = path.strip_prefix(&root_path) {
-                ui.begin_file(rel_path, size);
+                let rel_path = util::unixify_path(rel_path);
+
+                ui.begin_file(&rel_path, size);
                 let hash = util::hash_file(&path).unwrap();
                 ui.end_file();
 
-                files.insert(util::unixify_path(rel_path), hash);
+                files.insert(rel_path, hash);
             } else {
                 warn!("'{}' is outside the root path. Skipping.", path.display());
             }

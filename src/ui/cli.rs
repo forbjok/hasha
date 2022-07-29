@@ -12,8 +12,8 @@ impl UiHandler for CliUiHandler {
         eprintln!("Calculating checksums done.");
     }
 
-    fn begin_file(&mut self, path: &std::path::Path, _size: u64) {
-        eprintln!(" {} ...", path.display());
+    fn begin_file(&mut self, path: &str, _size: u64) {
+        eprintln!(" {} ...", path);
     }
 
     fn end_file(&mut self) {}

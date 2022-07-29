@@ -11,7 +11,7 @@ mod util;
 use tracing::debug;
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
-use crate::ui::cli::CliUiHandler;
+use crate::ui::fancy::FancyUiHandler;
 
 #[derive(Debug, Parser)]
 #[clap(name = "Hasha", version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"))]
@@ -49,7 +49,7 @@ fn main() {
 
     debug!("Debug logging enabled.");
 
-    let mut ui = CliUiHandler::default();
+    let mut ui = FancyUiHandler::new();
 
     let cmd_result = match opt.command {
         Command::Generate {

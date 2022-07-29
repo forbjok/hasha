@@ -10,6 +10,7 @@ repository = "https://github.com/forbjok/hasha.git"
 [dependencies]
 clap = { version = "3.2.15", features = ["derive"] }
 hex = "0.4.3"
+indicatif = "0.16.2"
 serde = "1.0.140"
 serde_derive = "1.0.140"
 serde_json = { version = "1.0.82", features = ["preserve_order"] }
