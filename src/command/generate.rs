@@ -7,8 +7,12 @@ pub fn generate(
     output_file: Option<PathBuf>,
     root_path: Option<PathBuf>,
 ) -> Result<(), CliError> {
-    let output_file = output_file.unwrap_or_else(|| "checksums.json".into());
-    let root_path = root_path.unwrap_or_else(|| std::env::current_dir().unwrap());
+    let path = util::normalize_path(path);
+
+    let output_file =
+        output_file.unwrap_or_else(|| format!("{}.checksums.json", path.display()).into());
+
+    let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path).into());
 
     let entries = walkdir::WalkDir::new(path)
         .into_iter()
