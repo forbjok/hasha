@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::{error::*, hasher::ChecksumSet, util};
+use crate::{checksum_set::ChecksumSet, error::*, util};
 
 pub fn diff(a: PathBuf, b: PathBuf) -> Result<(), CliError> {
     let checksums_a: ChecksumSet = {

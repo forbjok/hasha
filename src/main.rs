@@ -2,9 +2,9 @@ use std::path::PathBuf;
 
 use clap::Parser;
 
+mod checksum_set;
 mod command;
 mod error;
-mod hasher;
 mod util;
 
 use tracing::debug;

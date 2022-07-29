@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::{error::*, hasher::ChecksumSetBuilder, util};
+use crate::{checksum_set::ChecksumSetBuilder, error::*, util};
 
 pub fn calculate(
     path: PathBuf,
