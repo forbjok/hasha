@@ -15,7 +15,7 @@ pub enum HashType {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ChecksumSet {
     pub hash_type: HashType,
-    pub files: BTreeMap<PathBuf, String>,
+    pub files: BTreeMap<String, String>,
 }
 
 #[derive(Debug)]
@@ -26,9 +26,9 @@ pub struct ChecksumSetBuilder {
 
 #[derive(Debug)]
 pub struct ChecksumSetDiff {
-    pub additional_files: BTreeSet<PathBuf>,
-    pub missing_files: BTreeSet<PathBuf>,
-    pub differing_hashes: BTreeMap<PathBuf, (String, String)>,
+    pub additional_files: BTreeSet<String>,
+    pub missing_files: BTreeSet<String>,
+    pub differing_hashes: BTreeMap<String, (String, String)>,
 }
 
 impl ChecksumSetBuilder {
@@ -46,7 +46,7 @@ impl ChecksumSetBuilder {
     pub fn build(self) -> ChecksumSet {
         let root_path = self.root_path;
 
-        let mut files: BTreeMap<PathBuf, String> = BTreeMap::new();
+        let mut files: BTreeMap<String, String> = BTreeMap::new();
 
         for path in self.files.into_iter() {
             // Make path relative, as we only want to match on the path
@@ -56,7 +56,7 @@ impl ChecksumSetBuilder {
 
                 info!("HASH {} == {}", path.display(), hash);
 
-                files.insert(rel_path.into(), hash);
+                files.insert(util::unixify_path(rel_path), hash);
             } else {
                 warn!("'{}' is outside the root path. Skipping.", path.display());
             }
@@ -71,15 +71,15 @@ impl ChecksumSetBuilder {
 
 impl ChecksumSet {
     pub fn diff(&self, other: &ChecksumSet) -> ChecksumSetDiff {
-        let additional_files: BTreeSet<PathBuf> = other
+        let additional_files = other
             .files
             .keys()
             .filter(|p| !self.files.contains_key(*p))
             .cloned()
             .collect();
 
-        let mut missing_files: BTreeSet<PathBuf> = BTreeSet::new();
-        let mut differing_hashes: BTreeMap<PathBuf, (String, String)> = BTreeMap::new();
+        let mut missing_files: BTreeSet<String> = BTreeSet::new();
+        let mut differing_hashes: BTreeMap<String, (String, String)> = BTreeMap::new();
 
         for (path, hash) in self.files.iter() {
             if let Some(other_hash) = other.files.get(path) {

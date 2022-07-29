@@ -20,7 +20,7 @@ pub fn diff(a: PathBuf, b: PathBuf) -> Result<(), CliError> {
             println!("-- ADDITIONAL FILES --");
 
             for p in diff.additional_files.iter() {
-                println!("{}", p.display());
+                println!("{}", p);
             }
 
             println!();
@@ -30,7 +30,7 @@ pub fn diff(a: PathBuf, b: PathBuf) -> Result<(), CliError> {
             println!("-- MISSING FILES --");
 
             for p in diff.missing_files.iter() {
-                println!("{}", p.display());
+                println!("{}", p);
             }
 
             println!();
@@ -40,7 +40,7 @@ pub fn diff(a: PathBuf, b: PathBuf) -> Result<(), CliError> {
             println!("-- DIFFERING HASHES --");
 
             for (p, (a, b)) in diff.differing_hashes.iter() {
-                println!("{} == A: {} / B: {}", p.display(), a, b);
+                println!("{} == A: {} / B: {}", p, a, b);
             }
 
             println!();
