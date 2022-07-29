@@ -23,7 +23,7 @@ enum Command {
     Calculate {
         #[clap(help = "Path to calculate checksum set for")]
         path: PathBuf,
-        #[clap(long = "root-path", short = 'r', help = "Output file path")]
+        #[clap(long = "root-path", short = 'r', help = "Root path")]
         root_path: Option<PathBuf>,
         #[clap(long = "output", short = 'o', help = "Output file path")]
         output_file: Option<PathBuf>,
