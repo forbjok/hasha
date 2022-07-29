@@ -3,28 +3,25 @@ use std::path::PathBuf;
 use crate::{error::*, hasher::ChecksumSetBuilder, util};
 
 pub fn calculate(
-    files: Vec<String>,
+    path: PathBuf,
     output_file: Option<PathBuf>,
     root_path: Option<PathBuf>,
 ) -> Result<(), CliError> {
     let output_file = output_file.unwrap_or_else(|| "checksums.json".into());
     let root_path = root_path.unwrap_or_else(|| std::env::current_dir().unwrap());
 
-    // Transform list of glob patterns into a list of actual file paths
-    let file_paths = files
+    let entries = walkdir::WalkDir::new(path)
         .into_iter()
-        .filter_map(|pattern| glob::glob(&pattern).ok())
-        .flatten()
-        .filter_map(|path| path.ok());
+        .filter_map(|entry| entry.ok());
 
     let mut builder = ChecksumSetBuilder::new(root_path);
 
-    for file_path in file_paths {
-        if !file_path.is_file() {
+    for entry in entries {
+        if !entry.file_type().is_file() {
             continue;
         }
 
-        builder.add_file(file_path);
+        builder.add_file(entry.path());
     }
 
     let checksum_set = builder.build();

@@ -21,8 +21,8 @@ struct Opt {
 enum Command {
     #[clap(about = "Calculate a checksum set")]
     Calculate {
-        #[clap(help = "Files (glob patterns) to calculate checksums for")]
-        files: Vec<String>,
+        #[clap(help = "Path to calculate checksum set for")]
+        path: PathBuf,
         #[clap(long = "root-path", short = 'r', help = "Output file path")]
         root_path: Option<PathBuf>,
         #[clap(long = "output", short = 'o', help = "Output file path")]
@@ -48,10 +48,10 @@ fn main() {
 
     let cmd_result = match opt.command {
         Command::Calculate {
-            files,
+            path,
             root_path,
             output_file,
-        } => command::calculate(files, output_file, root_path),
+        } => command::calculate(path, output_file, root_path),
         Command::Diff { a, b } => command::diff(a, b),
     };
 

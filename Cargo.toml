@@ -9,7 +9,6 @@ repository = "https://github.com/forbjok/hasha.git"
 
 [dependencies]
 clap = { version = "3.2.15", features = ["derive"] }
-glob = "0.3.0"
 hex = "0.4.3"
 serde = "1.0.140"
 serde_derive = "1.0.140"
@@ -17,3 +16,4 @@ serde_json = { version = "1.0.82", features = ["preserve_order"] }
 sha2 = "0.10.2"
 tracing = "0.1.35"
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"] }
+walkdir = "2.3.2"
