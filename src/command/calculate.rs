@@ -20,6 +20,10 @@ pub fn calculate(
     let mut builder = ChecksumSetBuilder::new(root_path);
 
     for file_path in file_paths {
+        if !file_path.is_file() {
+            continue;
+        }
+
         builder.add_file(file_path);
     }
 
