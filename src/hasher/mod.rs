@@ -71,18 +71,18 @@ impl ChecksumSetBuilder {
 
 impl ChecksumSet {
     pub fn diff(&self, other: &ChecksumSet) -> ChecksumSetDiff {
-        let additional_files = other
+        let additional_files = self
             .files
             .keys()
-            .filter(|p| !self.files.contains_key(*p))
+            .filter(|p| !other.files.contains_key(*p))
             .cloned()
             .collect();
 
         let mut missing_files: BTreeSet<String> = BTreeSet::new();
         let mut differing_hashes: BTreeMap<String, (String, String)> = BTreeMap::new();
 
-        for (path, hash) in self.files.iter() {
-            if let Some(other_hash) = other.files.get(path) {
+        for (path, other_hash) in other.files.iter() {
+            if let Some(hash) = self.files.get(path) {
                 if other_hash != hash {
                     differing_hashes.insert(path.into(), (hash.clone(), other_hash.clone()));
                 }
