@@ -1,11 +1,12 @@
 use std::path::PathBuf;
 
-use crate::{checksum_set::ChecksumSetBuilder, error::*, util};
+use crate::{checksum_set::ChecksumSetBuilder, error::*, ui::UiHandler, util};
 
 pub fn generate(
     path: PathBuf,
     output_file: Option<PathBuf>,
     root_path: Option<PathBuf>,
+    ui: &mut dyn UiHandler,
 ) -> Result<(), CliError> {
     let path = util::normalize_path(path);
 
@@ -28,7 +29,7 @@ pub fn generate(
         builder.add_file(entry.path());
     }
 
-    let checksum_set = builder.build();
+    let checksum_set = builder.build(ui);
 
     let file = util::create_file(output_file).unwrap();
     serde_json::to_writer_pretty(file, &checksum_set).unwrap();

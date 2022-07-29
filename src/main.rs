@@ -5,10 +5,13 @@ use clap::Parser;
 mod checksum_set;
 mod command;
 mod error;
+mod ui;
 mod util;
 
 use tracing::debug;
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
+
+use crate::ui::cli::CliUiHandler;
 
 #[derive(Debug, Parser)]
 #[clap(name = "Hasha", version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"))]
@@ -46,12 +49,14 @@ fn main() {
 
     debug!("Debug logging enabled.");
 
+    let mut ui = CliUiHandler::default();
+
     let cmd_result = match opt.command {
         Command::Generate {
             path,
             root_path,
             output_file,
-        } => command::generate(path, output_file, root_path),
+        } => command::generate(path, output_file, root_path, &mut ui),
         Command::Diff { a, b } => command::diff(a, b),
     };
 

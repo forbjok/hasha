@@ -3,16 +3,31 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use tracing::{info, warn};
+use tracing::warn;
 
-use crate::util;
+use crate::{ui::UiHandler, util};
 
 use super::{ChecksumSet, HashType};
 
 #[derive(Debug)]
+struct FileInfo {
+    path: PathBuf,
+    size: u64,
+}
+
+#[derive(Debug)]
 pub struct ChecksumSetBuilder {
     root_path: PathBuf,
-    files: Vec<PathBuf>,
+    files: Vec<FileInfo>,
+}
+
+impl FileInfo {
+    pub fn from<P: AsRef<Path>>(path: P) -> Self {
+        let path = util::normalize_path(path);
+        let size = std::fs::metadata(&path).map(|m| m.len()).unwrap_or(0);
+
+        Self { path, size }
+    }
 }
 
 impl ChecksumSetBuilder {
@@ -24,27 +39,33 @@ impl ChecksumSetBuilder {
     }
 
     pub fn add_file<P: AsRef<Path>>(&mut self, path: P) {
-        self.files.push(util::normalize_path(path));
+        self.files.push(FileInfo::from(path));
     }
 
-    pub fn build(self) -> ChecksumSet {
+    pub fn build(self, ui: &mut dyn UiHandler) -> ChecksumSet {
         let root_path = self.root_path;
 
         let mut files: BTreeMap<String, String> = BTreeMap::new();
 
-        for path in self.files.into_iter() {
+        let total_size: u64 = self.files.iter().map(|fi| fi.size).sum();
+
+        ui.begin_checksums(self.files.len() as u32, total_size);
+
+        for FileInfo { path, size } in self.files.into_iter() {
             // Make path relative, as we only want to match on the path
             // relative to the root.
             if let Ok(rel_path) = path.strip_prefix(&root_path) {
+                ui.begin_file(rel_path, size);
                 let hash = util::hash_file(&path).unwrap();
-
-                info!("HASH {} == {}", path.display(), hash);
+                ui.end_file();
 
                 files.insert(util::unixify_path(rel_path), hash);
             } else {
                 warn!("'{}' is outside the root path. Skipping.", path.display());
             }
         }
+
+        ui.end_checksums();
 
         ChecksumSet {
             hash_type: HashType::Sha256,
