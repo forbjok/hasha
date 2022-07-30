@@ -16,6 +16,7 @@ pub use self::verify::*;
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum HashType {
+    Blake2s256,
     Crc32,
     Md5,
     Sha1,
