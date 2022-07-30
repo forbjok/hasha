@@ -20,6 +20,7 @@ pub enum HashType {
     Md5,
     Sha1,
     Sha256,
+    Sha3_256,
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -19,6 +19,7 @@ serde_derive = "1.0.140"
 serde_json = { version = "1.0.82", features = ["preserve_order"] }
 sha1 = "0.10.1"
 sha2 = "0.10.2"
+sha3 = "0.10.1"
 strum = "0.24.1"
 strum_macros = "0.24.2"
 tracing = "0.1.35"

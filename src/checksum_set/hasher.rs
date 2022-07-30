@@ -4,6 +4,7 @@ use byteorder::{BigEndian, ByteOrder};
 use md5::Md5;
 use sha1::Sha1;
 use sha2::{Digest, Sha256};
+use sha3::Sha3_256;
 
 use crate::{ui::UiHandler, util};
 
@@ -22,6 +23,7 @@ impl HashType {
             HashType::Md5 => hash_md5(path, callback),
             HashType::Sha1 => hash_sha1(path, callback),
             HashType::Sha256 => hash_sha256(path, callback),
+            HashType::Sha3_256 => hash_sha3_256(path, callback),
         }
     }
 
@@ -122,6 +124,27 @@ fn hash_sha256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, 
     }
 
     let hash = sha256.finalize();
+
+    Ok(hex::encode(hash))
+}
+
+fn hash_sha3_256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, util::FileError> {
+    let mut file = util::open_file(path)?;
+    let mut sha3_256 = Sha3_256::new();
+
+    let mut buf = [0u8; BUFFER_SIZE];
+
+    while let Ok(bytes) = file.read(&mut buf) {
+        if bytes == 0 {
+            break;
+        }
+
+        sha3_256.update(&buf[..bytes]);
+
+        callback(bytes);
+    }
+
+    let hash = sha3_256.finalize();
 
     Ok(hex::encode(hash))
 }
