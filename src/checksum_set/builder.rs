@@ -55,9 +55,10 @@ impl ChecksumSetBuilder {
             // Make path relative, as we only want to match on the path
             // relative to the root.
             if let Ok(rel_path) = path.strip_prefix(&root_path) {
+                let filename = rel_path.file_name().unwrap().to_string_lossy();
                 let rel_path = util::unixify_path(rel_path);
 
-                ui.begin_file(&rel_path, size);
+                ui.begin_file(&filename, size);
                 let hash = util::hash_file(&path, |b| ui.file_progress(b as u64)).unwrap();
                 ui.end_file();
 

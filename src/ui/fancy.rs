@@ -48,7 +48,7 @@ impl UiHandler for FancyUiHandler {
         }
     }
 
-    fn begin_file(&mut self, path: &str, size: u64) {
+    fn begin_file(&mut self, filename: &str, size: u64) {
         let bar = ProgressBar::new(size)
             .with_style(
                 ProgressStyle::default_bar()
@@ -58,7 +58,7 @@ impl UiHandler for FancyUiHandler {
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("File")
-            .with_message(path.to_owned());
+            .with_message(filename.to_owned());
 
         // Draw initial bar.
         bar.tick();

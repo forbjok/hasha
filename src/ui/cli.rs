@@ -12,8 +12,8 @@ impl UiHandler for CliUiHandler {
         eprintln!("Calculating checksums done.");
     }
 
-    fn begin_file(&mut self, path: &str, _size: u64) {
-        eprintln!(" {} ...", path);
+    fn begin_file(&mut self, filename: &str, _size: u64) {
+        eprintln!(" {} ...", filename);
     }
 
     fn file_progress(&mut self, _bytes: u64) {}
