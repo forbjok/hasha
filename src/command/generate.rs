@@ -10,8 +10,11 @@ pub fn generate(
 ) -> Result<(), CliError> {
     let path = util::normalize_path(path);
 
-    let output_file =
-        output_file.unwrap_or_else(|| format!("{}.checksums.json", path.display()).into());
+    let output_file = output_file.unwrap_or_else(|| {
+        path.file_name()
+            .map(|n| path.with_file_name(format!("{}.checksums.json", n.to_string_lossy())))
+            .unwrap_or_else(|| "checksums.json".into())
+    });
 
     let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path).into());
 
