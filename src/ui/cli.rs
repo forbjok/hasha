@@ -16,5 +16,7 @@ impl UiHandler for CliUiHandler {
         eprintln!(" {} ...", path);
     }
 
+    fn file_progress(&mut self, _bytes: u64) {}
+
     fn end_file(&mut self) {}
 }

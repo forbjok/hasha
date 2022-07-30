@@ -6,5 +6,6 @@ pub trait UiHandler {
     fn end_checksums(&mut self);
 
     fn begin_file(&mut self, path: &str, size: u64);
+    fn file_progress(&mut self, bytes: u64);
     fn end_file(&mut self);
 }

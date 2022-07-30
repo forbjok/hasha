@@ -58,7 +58,7 @@ impl ChecksumSetBuilder {
                 let rel_path = util::unixify_path(rel_path);
 
                 ui.begin_file(&rel_path, size);
-                let hash = util::hash_file(&path).unwrap();
+                let hash = util::hash_file(&path, |b| ui.file_progress(b as u64)).unwrap();
                 ui.end_file();
 
                 files.insert(rel_path, hash);

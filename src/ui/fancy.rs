@@ -27,9 +27,12 @@ impl UiHandler for FancyUiHandler {
         let bar = ProgressBar::new(total_size)
             .with_style(
                 ProgressStyle::default_bar()
-                    .template("[{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg}")
+                    .template(
+                        " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}",
+                    )
                     .progress_chars(&self.progress_chars),
             )
+            .with_prefix("Overall")
             .with_message("Calculating checksums...");
 
         // Draw initial bar.
@@ -46,18 +49,28 @@ impl UiHandler for FancyUiHandler {
     }
 
     fn begin_file(&mut self, path: &str, size: u64) {
-        let bar = ProgressBar::new(0)
-            .with_style(ProgressStyle::default_spinner().template("{spinner:.blue} {wide_msg}"))
+        let bar = ProgressBar::new(size)
+            .with_style(
+                ProgressStyle::default_bar()
+                    .template(
+                        " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}",
+                    )
+                    .progress_chars(&self.progress_chars),
+            )
+            .with_prefix("File")
             .with_message(path.to_owned());
 
         // Draw initial bar.
         bar.tick();
 
-        // Make spinner spin
-        bar.enable_steady_tick(250);
-
         self.current_file_size = size;
         self.file_progress_bar = Some(bar);
+    }
+
+    fn file_progress(&mut self, bytes: u64) {
+        if let Some(bar) = self.file_progress_bar.as_ref() {
+            bar.inc(bytes);
+        }
     }
 
     fn end_file(&mut self) {
