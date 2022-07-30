@@ -46,7 +46,7 @@ impl ChecksumSetBuilder {
         self
     }
 
-    pub fn build(&self, ui: &mut dyn UiHandler) -> ChecksumSet {
+    pub fn build(&self, ui: &mut dyn UiHandler) -> Result<ChecksumSet, anyhow::Error> {
         let hash_type = self.hash_type;
         let root_path = &self.root_path;
 
@@ -64,7 +64,7 @@ impl ChecksumSetBuilder {
             // Make path relative, as we only want to match on the path
             // relative to the root.
             if let Ok(rel_path) = path.strip_prefix(&root_path) {
-                let hash = hash_type.hash_file(path, ui);
+                let hash = hash_type.hash_file(path, ui)?;
 
                 let rel_path = util::unixify_path(rel_path);
                 files.insert(rel_path, hash);
@@ -75,6 +75,6 @@ impl ChecksumSetBuilder {
 
         ui.end_generate();
 
-        ChecksumSet { hash_type, files }
+        Ok(ChecksumSet { hash_type, files })
     }
 }

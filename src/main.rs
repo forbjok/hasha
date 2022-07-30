@@ -5,7 +5,6 @@ use clap::Parser;
 
 mod checksum_set;
 mod command;
-mod error;
 mod ui;
 mod util;
 
@@ -52,7 +51,7 @@ enum Command {
     },
 }
 
-fn main() {
+fn main() -> Result<(), anyhow::Error> {
     let opt = Opt::parse();
 
     // Initialize logging
@@ -62,27 +61,18 @@ fn main() {
 
     let mut ui = FancyUiHandler::new();
 
-    let cmd_result = match opt.command {
+    match opt.command {
         Command::Generate {
             path,
             root_path,
             output_file,
             hash_type,
-        } => command::generate(path, output_file, root_path, hash_type, &mut ui),
-        Command::Diff { a, b } => command::diff(a, b),
-        Command::Verify { path, root_path } => command::verify(path, root_path, &mut ui),
+        } => command::generate(path, output_file, root_path, hash_type, &mut ui)?,
+        Command::Diff { a, b } => command::diff(a, b)?,
+        Command::Verify { path, root_path } => command::verify(path, root_path, &mut ui)?,
     };
 
-    match cmd_result {
-        Ok(_) => {}
-        Err(err) => {
-            // Print error description to stderr
-            eprintln!("{}", err.description);
-
-            // Return the exit code that corresponds to the error kind
-            std::process::exit(err.kind.exit_code());
-        }
-    };
+    Ok(())
 }
 
 fn initialize_logging() {
