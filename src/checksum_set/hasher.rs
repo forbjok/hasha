@@ -2,6 +2,7 @@ use std::{io::Read, path::Path};
 
 use byteorder::{BigEndian, ByteOrder};
 use md5::Md5;
+use sha1::Sha1;
 use sha2::{Digest, Sha256};
 
 use crate::util;
@@ -19,6 +20,7 @@ impl HashType {
         match self {
             HashType::Crc32 => hash_crc32(path, callback),
             HashType::Md5 => hash_md5(path, callback),
+            HashType::Sha1 => hash_sha1(path, callback),
             HashType::Sha256 => hash_sha256(path, callback),
         }
     }
@@ -65,6 +67,27 @@ fn hash_md5<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, uti
     }
 
     let hash = md5.finalize();
+
+    Ok(hex::encode(hash))
+}
+
+fn hash_sha1<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, util::FileError> {
+    let mut file = util::open_file(path)?;
+    let mut sha1 = Sha1::new();
+
+    let mut buf = [0u8; BUFFER_SIZE];
+
+    while let Ok(bytes) = file.read(&mut buf) {
+        if bytes == 0 {
+            break;
+        }
+
+        sha1.update(&buf[..bytes]);
+
+        callback(bytes);
+    }
+
+    let hash = sha1.finalize();
 
     Ok(hex::encode(hash))
 }

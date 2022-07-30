@@ -16,6 +16,7 @@ pub use self::diff::*;
 pub enum HashType {
     Crc32,
     Md5,
+    Sha1,
     Sha256,
 }
 
