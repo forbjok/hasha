@@ -1,6 +1,6 @@
 use std::{io::Read, path::Path};
 
-use blake2::Blake2s256;
+use blake2::{Blake2b512, Blake2s256};
 use byteorder::{BigEndian, ByteOrder};
 use md5::Md5;
 use sha1::Sha1;
@@ -20,6 +20,7 @@ impl HashType {
         callback: C,
     ) -> Result<String, util::FileError> {
         match self {
+            HashType::Blake2b512 => hash_blake2b512(path, callback),
             HashType::Blake2s256 => hash_blake2s256(path, callback),
             HashType::Crc32 => hash_crc32(path, callback),
             HashType::Md5 => hash_md5(path, callback),
@@ -41,6 +42,30 @@ impl HashType {
 
         hash
     }
+}
+
+fn hash_blake2b512<C: FnMut(usize)>(
+    path: &Path,
+    mut callback: C,
+) -> Result<String, util::FileError> {
+    let mut file = util::open_file(path)?;
+    let mut blake2b512 = Blake2b512::new();
+
+    let mut buf = [0u8; BUFFER_SIZE];
+
+    while let Ok(bytes) = file.read(&mut buf) {
+        if bytes == 0 {
+            break;
+        }
+
+        blake2b512.update(&buf[..bytes]);
+
+        callback(bytes);
+    }
+
+    let hash = blake2b512.finalize();
+
+    Ok(hex::encode(hash))
 }
 
 fn hash_blake2s256<C: FnMut(usize)>(
