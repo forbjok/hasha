@@ -18,6 +18,7 @@ pub use self::verify::*;
 pub enum HashType {
     Blake2b512,
     Blake2s256,
+    Blake3,
     Crc32,
     Md5,
     Sha1,

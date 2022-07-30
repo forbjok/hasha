@@ -22,6 +22,7 @@ impl HashType {
         match self {
             HashType::Blake2b512 => hash_blake2b512(path, callback),
             HashType::Blake2s256 => hash_blake2s256(path, callback),
+            HashType::Blake3 => hash_blake3(path, callback),
             HashType::Crc32 => hash_crc32(path, callback),
             HashType::Md5 => hash_md5(path, callback),
             HashType::Sha1 => hash_sha1(path, callback),
@@ -90,6 +91,27 @@ fn hash_blake2s256<C: FnMut(usize)>(
     let hash = blake2s256.finalize();
 
     Ok(hex::encode(hash))
+}
+
+fn hash_blake3<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, util::FileError> {
+    let mut file = util::open_file(path)?;
+    let mut hasher = blake3::Hasher::new();
+
+    let mut buf = [0u8; BUFFER_SIZE];
+
+    while let Ok(bytes) = file.read(&mut buf) {
+        if bytes == 0 {
+            break;
+        }
+
+        hasher.update(&buf[..bytes]);
+
+        callback(bytes);
+    }
+
+    let hash = hasher.finalize();
+
+    Ok(hash.to_hex().to_string())
 }
 
 fn hash_crc32<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, util::FileError> {
