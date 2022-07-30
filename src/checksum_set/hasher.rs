@@ -5,7 +5,7 @@ use md5::Md5;
 use sha1::Sha1;
 use sha2::{Digest, Sha256};
 
-use crate::util;
+use crate::{ui::UiHandler, util};
 
 use super::HashType;
 
@@ -23,6 +23,19 @@ impl HashType {
             HashType::Sha1 => hash_sha1(path, callback),
             HashType::Sha256 => hash_sha256(path, callback),
         }
+    }
+
+    pub fn hash_file(&self, path: &Path, ui: &mut dyn UiHandler) -> String {
+        let filename = path.file_name().unwrap().to_string_lossy();
+        let size = std::fs::metadata(path).map(|m| m.len()).unwrap_or(0);
+
+        ui.begin_file(&filename, size);
+
+        let hash = self.hash(path, |b| ui.file_progress(b as u64)).unwrap();
+
+        ui.end_file();
+
+        hash
     }
 }
 

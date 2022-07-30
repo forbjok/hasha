@@ -45,4 +45,50 @@ impl ChecksumSetDiff {
             || !self.missing_files.is_empty()
             || !self.differing_hashes.is_empty()
     }
+
+    pub fn print(&self) {
+        let mut summary: Vec<String> = Vec::new();
+
+        println!();
+
+        if !self.additional_files.is_empty() {
+            println!("-- ADDITIONAL FILES --");
+
+            for p in self.additional_files.iter() {
+                println!("{}", p);
+            }
+
+            println!();
+
+            summary.push(format!("{} additional files.", self.additional_files.len()));
+        }
+
+        if !self.missing_files.is_empty() {
+            println!("-- MISSING FILES --");
+
+            for p in self.missing_files.iter() {
+                println!("{}", p);
+            }
+
+            println!();
+
+            summary.push(format!("{} missing files.", self.missing_files.len()));
+        }
+
+        if !self.differing_hashes.is_empty() {
+            println!("-- DIFFERING HASHES --");
+
+            for (p, (a, b)) in self.differing_hashes.iter() {
+                println!("{} == A: {} / B: {}", p, a, b);
+            }
+
+            println!();
+
+            summary.push(format!("{} differing hashes.", self.differing_hashes.len()));
+        }
+
+        for line in summary.iter() {
+            println!("{}", line);
+        }
+    }
 }

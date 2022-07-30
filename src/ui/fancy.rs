@@ -2,6 +2,11 @@ use indicatif::{ProgressBar, ProgressStyle};
 
 use super::UiHandler;
 
+const OVERALL_TEMPLATE: &str =
+    " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
+const FILE_TEMPLATE: &str =
+    " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
+
 pub struct FancyUiHandler {
     progress_chars: String,
 
@@ -23,13 +28,11 @@ impl FancyUiHandler {
 }
 
 impl UiHandler for FancyUiHandler {
-    fn begin_checksums(&mut self, _file_count: u32, total_size: u64) {
+    fn begin_generate(&mut self, _file_count: u32, total_size: u64) {
         let bar = ProgressBar::new(total_size)
             .with_style(
                 ProgressStyle::default_bar()
-                    .template(
-                        " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}",
-                    )
+                    .template(OVERALL_TEMPLATE)
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("Overall")
@@ -41,9 +44,32 @@ impl UiHandler for FancyUiHandler {
         self.overall_progress_bar = Some(bar);
     }
 
-    fn end_checksums(&mut self) {
+    fn end_generate(&mut self) {
         if let Some(bar) = self.overall_progress_bar.take() {
             bar.println("Checksum calculation finished.");
+            bar.finish_and_clear();
+        }
+    }
+
+    fn begin_verify(&mut self, _file_count: u32, total_size: u64) {
+        let bar = ProgressBar::new(total_size)
+            .with_style(
+                ProgressStyle::default_bar()
+                    .template(OVERALL_TEMPLATE)
+                    .progress_chars(&self.progress_chars),
+            )
+            .with_prefix("Overall")
+            .with_message("Verifying...");
+
+        // Draw initial bar.
+        bar.tick();
+
+        self.overall_progress_bar = Some(bar);
+    }
+
+    fn end_verify(&mut self) {
+        if let Some(bar) = self.overall_progress_bar.take() {
+            bar.println("Verification finished.");
             bar.finish_and_clear();
         }
     }
@@ -52,9 +78,7 @@ impl UiHandler for FancyUiHandler {
         let bar = ProgressBar::new(size)
             .with_style(
                 ProgressStyle::default_bar()
-                    .template(
-                        " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}",
-                    )
+                    .template(FILE_TEMPLATE)
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("File")

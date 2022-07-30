@@ -1,6 +1,7 @@
 mod builder;
 mod diff;
 mod hasher;
+mod verify;
 
 use std::collections::BTreeMap;
 
@@ -9,6 +10,7 @@ use strum_macros::EnumString;
 
 pub use self::builder::*;
 pub use self::diff::*;
+pub use self::verify::*;
 
 #[derive(Copy, Clone, Debug, Deserialize, EnumString, Serialize)]
 #[serde(rename_all = "lowercase")]

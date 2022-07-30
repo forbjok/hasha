@@ -4,12 +4,20 @@ use super::UiHandler;
 pub struct CliUiHandler;
 
 impl UiHandler for CliUiHandler {
-    fn begin_checksums(&mut self, _file_count: u32, _total_size: u64) {
+    fn begin_generate(&mut self, _file_count: u32, _total_size: u64) {
         eprintln!("Calculating checksums...");
     }
 
-    fn end_checksums(&mut self) {
+    fn end_generate(&mut self) {
         eprintln!("Calculating checksums done.");
+    }
+
+    fn begin_verify(&mut self, _file_count: u32, _total_size: u64) {
+        eprintln!("Verifying...");
+    }
+
+    fn end_verify(&mut self) {
+        eprintln!("Verification done.");
     }
 
     fn begin_file(&mut self, filename: &str, _size: u64) {

@@ -42,6 +42,14 @@ enum Command {
         #[clap(help = "Checksum set to compare with")]
         b: PathBuf,
     },
+
+    #[clap(about = "Verify checksums")]
+    Verify {
+        #[clap(help = "Checksum set to verify")]
+        path: PathBuf,
+        #[clap(long = "root-path", short = 'r', help = "Root path")]
+        root_path: Option<PathBuf>,
+    },
 }
 
 fn main() {
@@ -62,6 +70,7 @@ fn main() {
             hash_type,
         } => command::generate(path, output_file, root_path, hash_type, &mut ui),
         Command::Diff { a, b } => command::diff(a, b),
+        Command::Verify { path, root_path } => command::verify(path, root_path, &mut ui),
     };
 
     match cmd_result {

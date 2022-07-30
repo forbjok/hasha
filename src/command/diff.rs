@@ -16,35 +16,7 @@ pub fn diff(a: PathBuf, b: PathBuf) -> Result<(), CliError> {
     let diff = checksums_a.diff(&checksums_b);
 
     if diff.is_different() {
-        if !diff.additional_files.is_empty() {
-            println!("-- ADDITIONAL FILES --");
-
-            for p in diff.additional_files.iter() {
-                println!("{}", p);
-            }
-
-            println!();
-        }
-
-        if !diff.missing_files.is_empty() {
-            println!("-- MISSING FILES --");
-
-            for p in diff.missing_files.iter() {
-                println!("{}", p);
-            }
-
-            println!();
-        }
-
-        if !diff.differing_hashes.is_empty() {
-            println!("-- DIFFERING HASHES --");
-
-            for (p, (a, b)) in diff.differing_hashes.iter() {
-                println!("{} == A: {} / B: {}", p, a, b);
-            }
-
-            println!();
-        }
+        diff.print();
     } else {
         println!("No differences found.");
     }
