@@ -8,7 +8,7 @@ use crate::util;
 
 use super::HashType;
 
-const BUFFER_SIZE: usize = 65536;
+const BUFFER_SIZE: usize = 524288;
 
 impl HashType {
     pub fn hash<C: FnMut(usize)>(
