@@ -5,11 +5,11 @@ pub struct CliUiHandler;
 
 impl UiHandler for CliUiHandler {
     fn begin_generate(&mut self, _file_count: u32, _total_size: u64) {
-        eprintln!("Calculating checksums...");
+        eprintln!("Generating checksum set...");
     }
 
     fn end_generate(&mut self) {
-        eprintln!("Calculating checksums done.");
+        eprintln!("Generating checksum set finished.");
     }
 
     fn begin_verify(&mut self, _file_count: u32, _total_size: u64) {
@@ -17,7 +17,7 @@ impl UiHandler for CliUiHandler {
     }
 
     fn end_verify(&mut self) {
-        eprintln!("Verification done.");
+        eprintln!("Verification finished.");
     }
 
     fn begin_file(&mut self, filename: &str, _size: u64) {

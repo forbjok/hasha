@@ -36,7 +36,7 @@ impl UiHandler for FancyUiHandler {
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("Overall")
-            .with_message("Calculating checksums...");
+            .with_message("Generating checksum set...");
 
         // Draw initial bar.
         bar.tick();
@@ -46,7 +46,7 @@ impl UiHandler for FancyUiHandler {
 
     fn end_generate(&mut self) {
         if let Some(bar) = self.overall_progress_bar.take() {
-            bar.println("Checksum calculation finished.");
+            bar.println("Generating checksum set finished.");
             bar.finish_and_clear();
         }
     }
