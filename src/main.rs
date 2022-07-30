@@ -1,5 +1,6 @@
 use std::path::PathBuf;
 
+use checksum_set::HashType;
 use clap::Parser;
 
 mod checksum_set;
@@ -30,6 +31,8 @@ enum Command {
         root_path: Option<PathBuf>,
         #[clap(long = "output", short = 'o', help = "Output file path")]
         output_file: Option<PathBuf>,
+        #[clap(long = "hash-type", short = 't', help = "Specify hash type")]
+        hash_type: Option<HashType>,
     },
 
     #[clap(about = "Compare differences between two checksum sets")]
@@ -56,7 +59,8 @@ fn main() {
             path,
             root_path,
             output_file,
-        } => command::generate(path, output_file, root_path, &mut ui),
+            hash_type,
+        } => command::generate(path, output_file, root_path, hash_type, &mut ui),
         Command::Diff { a, b } => command::diff(a, b),
     };
 

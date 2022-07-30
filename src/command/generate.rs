@@ -1,13 +1,20 @@
 use std::path::PathBuf;
 
-use crate::{checksum_set::ChecksumSetBuilder, error::*, ui::UiHandler, util};
+use crate::{
+    checksum_set::{ChecksumSetBuilder, HashType},
+    error::*,
+    ui::UiHandler,
+    util,
+};
 
 pub fn generate(
     path: PathBuf,
     output_file: Option<PathBuf>,
     root_path: Option<PathBuf>,
+    hash_type: Option<HashType>,
     ui: &mut dyn UiHandler,
 ) -> Result<(), CliError> {
+    let hash_type = hash_type.unwrap_or(HashType::Sha256);
     let path = util::normalize_path(path);
 
     let output_file = output_file.unwrap_or_else(|| {
@@ -22,7 +29,7 @@ pub fn generate(
         .into_iter()
         .filter_map(|entry| entry.ok());
 
-    let mut builder = ChecksumSetBuilder::new(root_path);
+    let mut builder = ChecksumSetBuilder::new(hash_type, root_path);
 
     for entry in entries {
         if !entry.file_type().is_file() {

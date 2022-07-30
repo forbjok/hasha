@@ -17,6 +17,7 @@ struct FileInfo {
 
 #[derive(Debug)]
 pub struct ChecksumSetBuilder {
+    hash_type: HashType,
     root_path: PathBuf,
     files: Vec<FileInfo>,
 }
@@ -31,8 +32,9 @@ impl FileInfo {
 }
 
 impl ChecksumSetBuilder {
-    pub fn new(root_path: PathBuf) -> Self {
+    pub fn new(hash_type: HashType, root_path: PathBuf) -> Self {
         Self {
+            hash_type,
             root_path,
             files: Vec::new(),
         }
@@ -43,6 +45,7 @@ impl ChecksumSetBuilder {
     }
 
     pub fn build(self, ui: &mut dyn UiHandler) -> ChecksumSet {
+        let hash_type = self.hash_type;
         let root_path = self.root_path;
 
         let mut files: BTreeMap<String, String> = BTreeMap::new();
@@ -59,7 +62,9 @@ impl ChecksumSetBuilder {
                 let rel_path = util::unixify_path(rel_path);
 
                 ui.begin_file(&filename, size);
-                let hash = util::hash_file(&path, |b| ui.file_progress(b as u64)).unwrap();
+                let hash = hash_type
+                    .hash(&path, |b| ui.file_progress(b as u64))
+                    .unwrap();
                 ui.end_file();
 
                 files.insert(rel_path, hash);
@@ -70,9 +75,6 @@ impl ChecksumSetBuilder {
 
         ui.end_checksums();
 
-        ChecksumSet {
-            hash_type: HashType::Sha256,
-            files,
-        }
+        ChecksumSet { hash_type, files }
     }
 }
