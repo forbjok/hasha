@@ -14,6 +14,7 @@ pub use self::diff::*;
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum HashType {
+    Crc32,
     Sha256,
 }
 
