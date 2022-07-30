@@ -7,6 +7,8 @@ use crate::util;
 
 use super::HashType;
 
+const BUFFER_SIZE: usize = 65536;
+
 impl HashType {
     pub fn hash<C: FnMut(usize)>(
         &self,
@@ -24,7 +26,7 @@ fn hash_crc32<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, u
     let mut file = util::open_file(path)?;
     let mut hasher = crc32fast::Hasher::new();
 
-    let mut buf = [0u8; 65536];
+    let mut buf = [0u8; BUFFER_SIZE];
 
     while let Ok(bytes) = file.read(&mut buf) {
         if bytes == 0 {
@@ -44,12 +46,21 @@ fn hash_crc32<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, u
     Ok(hex::encode(buf))
 }
 
-fn hash_sha256<C: FnMut(usize)>(path: &Path, callback: C) -> Result<String, util::FileError> {
+fn hash_sha256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, util::FileError> {
     let mut file = util::open_file(path)?;
     let mut sha256 = Sha256::new();
 
-    let mut writer = progress_streams::ProgressWriter::new(&mut sha256, callback);
-    std::io::copy(&mut file, &mut writer).unwrap();
+    let mut buf = [0u8; BUFFER_SIZE];
+
+    while let Ok(bytes) = file.read(&mut buf) {
+        if bytes == 0 {
+            break;
+        }
+
+        sha256.update(&buf[..bytes]);
+
+        callback(bytes);
+    }
 
     let hash = sha256.finalize();
 
