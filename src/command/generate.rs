@@ -1,4 +1,4 @@
-use std::{fs, path::PathBuf};
+use std::{fs, path::Path};
 
 use anyhow::Context;
 
@@ -9,22 +9,22 @@ use crate::{
 };
 
 pub fn generate(
-    path: PathBuf,
-    output_file: Option<PathBuf>,
-    root_path: Option<PathBuf>,
+    path: &Path,
+    output_file: Option<&Path>,
+    root_path: Option<&Path>,
     hash_type: Option<HashType>,
     ui: &mut dyn UiHandler,
 ) -> Result<(), anyhow::Error> {
     let hash_type = hash_type.unwrap_or(HashType::Sha256);
     let path = util::normalize_path(path);
 
-    let output_file = output_file.unwrap_or_else(|| {
+    let output_file = output_file.map(|p| p.to_path_buf()).unwrap_or_else(|| {
         path.file_name()
             .map(|n| path.with_file_name(format!("{}.checksums.json", n.to_string_lossy())))
             .unwrap_or_else(|| "checksums.json".into())
     });
 
-    let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path).into());
+    let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path));
 
     let checksum_set = ChecksumSetBuilder::new(hash_type, root_path)
         .add_path(&path)

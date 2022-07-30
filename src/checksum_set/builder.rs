@@ -17,10 +17,10 @@ pub struct ChecksumSetBuilder {
 }
 
 impl ChecksumSetBuilder {
-    pub fn new(hash_type: HashType, root_path: PathBuf) -> Self {
+    pub fn new(hash_type: HashType, root_path: &Path) -> Self {
         Self {
             hash_type,
-            root_path,
+            root_path: root_path.into(),
             files: Vec::new(),
         }
     }

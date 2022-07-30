@@ -37,16 +37,20 @@ enum Command {
     #[clap(about = "Compare differences between two checksum sets")]
     Diff {
         #[clap(help = "Checksum set to compare")]
-        a: PathBuf,
+        checksums_a_path: PathBuf,
         #[clap(help = "Checksum set to compare with")]
-        b: PathBuf,
+        checksums_b_path: PathBuf,
     },
 
     #[clap(about = "Verify checksums")]
     Verify {
-        #[clap(help = "Checksum set to verify")]
-        path: PathBuf,
-        #[clap(long = "root-path", short = 'r', help = "Root path")]
+        #[clap(help = "Path to checksum set file to verify")]
+        checksums_path: PathBuf,
+        #[clap(
+            long = "root-path",
+            short = 'r',
+            help = "Specify root path (defaults to parent directory of checksum file)"
+        )]
         root_path: Option<PathBuf>,
     },
 }
@@ -67,9 +71,21 @@ fn main() -> Result<(), anyhow::Error> {
             root_path,
             output_file,
             hash_type,
-        } => command::generate(path, output_file, root_path, hash_type, &mut ui)?,
-        Command::Diff { a, b } => command::diff(a, b)?,
-        Command::Verify { path, root_path } => command::verify(path, root_path, &mut ui)?,
+        } => command::generate(
+            &path,
+            output_file.as_deref(),
+            root_path.as_deref(),
+            hash_type,
+            &mut ui,
+        )?,
+        Command::Diff {
+            checksums_a_path,
+            checksums_b_path,
+        } => command::diff(&checksums_a_path, &checksums_b_path)?,
+        Command::Verify {
+            checksums_path,
+            root_path,
+        } => command::verify(&checksums_path, root_path.as_deref(), &mut ui)?,
     };
 
     Ok(())
