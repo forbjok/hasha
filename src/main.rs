@@ -71,13 +71,7 @@ fn main() -> Result<(), anyhow::Error> {
             root_path,
             output_file,
             hash_type,
-        } => command::generate(
-            &path,
-            output_file.as_deref(),
-            root_path.as_deref(),
-            hash_type,
-            &mut ui,
-        )?,
+        } => command::generate(&path, output_file.as_deref(), root_path.as_deref(), hash_type, &mut ui)?,
         Command::Diff {
             checksums_a_path,
             checksums_b_path,
@@ -93,12 +87,9 @@ fn main() -> Result<(), anyhow::Error> {
 
 fn initialize_logging() {
     let subscriber = FmtSubscriber::builder()
-        .with_env_filter(
-            EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("warn")),
-        )
+        .with_env_filter(EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("warn")))
         .with_writer(std::io::stderr)
         .finish();
 
-    tracing::subscriber::set_global_default(subscriber)
-        .expect("Setting default tracing subscriber failed!");
+    tracing::subscriber::set_global_default(subscriber).expect("Setting default tracing subscriber failed!");
 }

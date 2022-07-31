@@ -31,9 +31,7 @@ impl ChecksumSetBuilder {
     }
 
     pub fn add_path<P: AsRef<Path>>(&mut self, path: P) -> &mut Self {
-        let entries = walkdir::WalkDir::new(path)
-            .into_iter()
-            .filter_map(|entry| entry.ok());
+        let entries = walkdir::WalkDir::new(path).into_iter().filter_map(|entry| entry.ok());
 
         for entry in entries {
             if !entry.file_type().is_file() {

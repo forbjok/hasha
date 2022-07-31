@@ -2,10 +2,8 @@ use indicatif::{ProgressBar, ProgressStyle};
 
 use super::UiHandler;
 
-const OVERALL_TEMPLATE: &str =
-    " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
-const FILE_TEMPLATE: &str =
-    " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
+const OVERALL_TEMPLATE: &str = " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
+const FILE_TEMPLATE: &str = " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
 
 pub struct FancyUiHandler {
     progress_chars: String,

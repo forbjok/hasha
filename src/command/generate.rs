@@ -31,8 +31,8 @@ pub fn generate(
         .build(ui)
         .with_context(|| format!("Generating checksum set for path: {}", path.display()))?;
 
-    let file = fs::File::create(&output_file)
-        .with_context(|| format!("Creating output file: {}", output_file.display()))?;
+    let file =
+        fs::File::create(&output_file).with_context(|| format!("Creating output file: {}", output_file.display()))?;
     serde_json::to_writer_pretty(file, &checksum_set)
         .with_context(|| format!("Writing to output file: {}", output_file.display()))?;
 

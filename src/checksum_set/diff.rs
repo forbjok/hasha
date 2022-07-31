@@ -41,9 +41,7 @@ impl ChecksumSet {
 
 impl ChecksumSetDiff {
     pub fn is_different(&self) -> bool {
-        !self.additional_files.is_empty()
-            || !self.missing_files.is_empty()
-            || !self.differing_hashes.is_empty()
+        !self.additional_files.is_empty() || !self.missing_files.is_empty() || !self.differing_hashes.is_empty()
     }
 
     pub fn print(&self) {

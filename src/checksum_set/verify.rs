@@ -8,11 +8,7 @@ use crate::ui::UiHandler;
 use super::{ChecksumSet, ChecksumSetDiff};
 
 impl ChecksumSet {
-    pub fn verify(
-        &self,
-        root_path: &Path,
-        ui: &mut dyn UiHandler,
-    ) -> Result<ChecksumSetDiff, anyhow::Error> {
+    pub fn verify(&self, root_path: &Path, ui: &mut dyn UiHandler) -> Result<ChecksumSetDiff, anyhow::Error> {
         let hash_type = self.hash_type;
 
         let files: Vec<_> = self

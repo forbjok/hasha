@@ -45,8 +45,7 @@ impl HashType {
 }
 
 fn hash_blake2b512<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut blake2b512 = Blake2b512::new();
 
@@ -68,8 +67,7 @@ fn hash_blake2b512<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<Stri
 }
 
 fn hash_blake2s256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut blake2s256 = Blake2s256::new();
 
@@ -91,8 +89,7 @@ fn hash_blake2s256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<Stri
 }
 
 fn hash_blake3<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut hasher = blake3::Hasher::new();
 
@@ -114,8 +111,7 @@ fn hash_blake3<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, 
 }
 
 fn hash_crc32<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut hasher = crc32fast::Hasher::new();
 
@@ -140,8 +136,7 @@ fn hash_crc32<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, a
 }
 
 fn hash_md5<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut md5 = Md5::new();
 
@@ -163,8 +158,7 @@ fn hash_md5<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, any
 }
 
 fn hash_sha1<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut sha1 = Sha1::new();
 
@@ -186,8 +180,7 @@ fn hash_sha1<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, an
 }
 
 fn hash_sha256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut sha256 = Sha256::new();
 
@@ -209,8 +202,7 @@ fn hash_sha256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, 
 }
 
 fn hash_sha3_256<C: FnMut(usize)>(path: &Path, mut callback: C) -> Result<String, anyhow::Error> {
-    let mut file = fs::File::open(path)
-        .with_context(|| format!("Opening file for hashing: {}", path.display()))?;
+    let mut file = fs::File::open(path).with_context(|| format!("Opening file for hashing: {}", path.display()))?;
 
     let mut sha3_256 = Sha3_256::new();
 
