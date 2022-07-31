@@ -1,4 +1,4 @@
-use std::{fs, path::Path};
+use std::{fs, path::Path, time::Instant};
 
 use anyhow::Context;
 
@@ -26,10 +26,14 @@ pub fn generate(
 
     let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path));
 
+    let now = Instant::now();
+
     let checksum_set = ChecksumSetBuilder::new(hash_type, root_path)
         .add_path(&path)
         .build(ui)
         .with_context(|| format!("Generating checksum set for path: {}", path.display()))?;
+
+    eprintln!("Operation took {}.", util::humanize_duration(now.elapsed()));
 
     let file =
         fs::File::create(&output_file).with_context(|| format!("Creating output file: {}", output_file.display()))?;
