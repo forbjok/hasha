@@ -82,6 +82,8 @@ fn main() -> Result<(), anyhow::Error> {
         } => command::verify(&checksums_path, root_path.as_deref(), &mut ui)?,
     };
 
+    ui.clear()?;
+
     Ok(())
 }
 
