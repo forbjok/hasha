@@ -31,6 +31,7 @@ impl UiHandler for FancyUiHandler {
             .with_style(
                 ProgressStyle::default_bar()
                     .template(OVERALL_TEMPLATE)
+                    .unwrap()
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("Overall")
@@ -54,6 +55,7 @@ impl UiHandler for FancyUiHandler {
             .with_style(
                 ProgressStyle::default_bar()
                     .template(OVERALL_TEMPLATE)
+                    .unwrap()
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("Overall")
@@ -77,6 +79,7 @@ impl UiHandler for FancyUiHandler {
             .with_style(
                 ProgressStyle::default_bar()
                     .template(FILE_TEMPLATE)
+                    .unwrap()
                     .progress_chars(&self.progress_chars),
             )
             .with_prefix("File")
