@@ -9,7 +9,6 @@ pub struct FancyUiHandler {
     multi_progress: MultiProgress,
     progress_chars: String,
 
-    current_file_size: u64,
     overall_pb: Option<ProgressBar>,
     file_pb: Option<ProgressBar>,
 }
@@ -20,7 +19,6 @@ impl FancyUiHandler {
             multi_progress: MultiProgress::new(),
             progress_chars: "●●·".to_owned(),
 
-            current_file_size: 0,
             overall_pb: None,
             file_pb: None,
         }
@@ -93,7 +91,6 @@ impl UiHandler for FancyUiHandler {
 
         let pb = self.multi_progress.add(pb);
 
-        self.current_file_size = size;
         self.file_pb = Some(pb);
     }
 
@@ -101,15 +98,15 @@ impl UiHandler for FancyUiHandler {
         if let Some(pb) = self.file_pb.as_ref() {
             pb.inc(bytes);
         }
+
+        if let Some(pb) = self.overall_pb.as_ref() {
+            pb.inc(bytes);
+        }
     }
 
     fn end_file(&mut self) {
         if let Some(pb) = self.file_pb.take() {
             pb.finish_and_clear();
-        }
-
-        if let Some(pb) = self.overall_pb.as_ref() {
-            pb.inc(self.current_file_size);
         }
     }
 }
