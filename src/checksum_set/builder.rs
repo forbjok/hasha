@@ -14,6 +14,7 @@ pub struct ChecksumSetBuilder {
     hash_type: HashType,
     root_path: PathBuf,
     files: Vec<PathBuf>,
+    total_size: u64,
 }
 
 impl ChecksumSetBuilder {
@@ -22,15 +23,21 @@ impl ChecksumSetBuilder {
             hash_type,
             root_path: root_path.into(),
             files: Vec::new(),
+            total_size: 0,
         }
     }
 
     pub fn add_file<P: AsRef<Path>>(&mut self, path: P) {
         let path = util::normalize_path(path);
+        let size = std::fs::metadata(&path).map(|m| m.len()).unwrap_or(0);
+
         self.files.push(path);
+        self.total_size += size;
     }
 
-    pub fn add_path<P: AsRef<Path>>(&mut self, path: P) -> &mut Self {
+    pub fn add_path<P: AsRef<Path>>(&mut self, path: P, ui: &mut dyn UiHandler) -> &mut Self {
+        ui.begin_scan();
+
         let entries = walkdir::WalkDir::new(path).into_iter().filter_map(|entry| entry.ok());
 
         for entry in entries {
@@ -41,6 +48,8 @@ impl ChecksumSetBuilder {
             self.add_file(entry.path());
         }
 
+        ui.end_scan();
+
         self
     }
 
@@ -50,13 +59,7 @@ impl ChecksumSetBuilder {
 
         let mut files: BTreeMap<String, String> = BTreeMap::new();
 
-        let total_size: u64 = self
-            .files
-            .iter()
-            .map(|path| std::fs::metadata(path).map(|m| m.len()).unwrap_or(0))
-            .sum();
-
-        ui.begin_generate(self.files.len() as u32, total_size);
+        ui.begin_generate(self.files.len() as u32, self.total_size);
 
         for path in self.files.iter() {
             // Make path relative, as we only want to match on the path
@@ -71,8 +74,10 @@ impl ChecksumSetBuilder {
             }
         }
 
+        let checksums = ChecksumSet { hash_type, files };
+
         ui.end_generate();
 
-        Ok(ChecksumSet { hash_type, files })
+        Ok(checksums)
     }
 }

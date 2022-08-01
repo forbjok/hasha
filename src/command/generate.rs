@@ -29,7 +29,7 @@ pub fn generate(
     let now = Instant::now();
 
     let checksum_set = ChecksumSetBuilder::new(hash_type, root_path)
-        .add_path(&path)
+        .add_path(&path, ui)
         .build(ui)
         .with_context(|| format!("Generating checksum set for path: {}", path.display()))?;
 

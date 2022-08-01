@@ -6,6 +6,7 @@ use super::UiHandler;
 
 const LOAD_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
 const DIFF_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
+const SCAN_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
 
 const OVERALL_TEMPLATE: &str =
     " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} @ {bytes_per_sec}, ETA: {eta} {wide_msg:.blue}";
@@ -19,6 +20,7 @@ pub struct FancyUiHandler {
 
     load_pb: Option<ProgressBar>,
     diff_pb: Option<ProgressBar>,
+    scan_pb: Option<ProgressBar>,
     overall_pb: Option<ProgressBar>,
     file_pb: Option<ProgressBar>,
 }
@@ -33,6 +35,7 @@ impl FancyUiHandler {
 
             load_pb: None,
             diff_pb: None,
+            scan_pb: None,
             overall_pb: None,
             file_pb: None,
         }
@@ -84,6 +87,24 @@ impl UiHandler for FancyUiHandler {
     fn end_diff(&mut self) {
         if let Some(pb) = self.diff_pb.take() {
             pb.println("Comparison finished.");
+            pb.finish_and_clear();
+        }
+    }
+
+    fn begin_scan(&mut self) {
+        let pb = ProgressBar::new_spinner()
+            .with_style(ProgressStyle::default_bar().template(SCAN_TEMPLATE).unwrap())
+            .with_message("Scanning directory content...");
+
+        let pb = self.multi_progress.add(pb);
+
+        pb.enable_steady_tick(Duration::from_millis(120));
+
+        self.scan_pb = Some(pb);
+    }
+
+    fn end_scan(&mut self) {
+        if let Some(pb) = self.scan_pb.take() {
             pb.finish_and_clear();
         }
     }
