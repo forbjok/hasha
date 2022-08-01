@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
+use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget, ProgressStyle};
 
 use super::UiHandler;
 
@@ -28,7 +28,7 @@ pub struct FancyUiHandler {
 impl FancyUiHandler {
     pub fn new() -> Self {
         Self {
-            multi_progress: MultiProgress::new(),
+            multi_progress: MultiProgress::with_draw_target(ProgressDrawTarget::stderr_with_hz(5)),
             progress_chars: "●●·".to_owned(),
 
             loading_filename: None,
