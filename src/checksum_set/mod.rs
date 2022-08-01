@@ -1,6 +1,7 @@
 mod builder;
 mod diff;
 mod hasher;
+mod load;
 mod verify;
 
 use std::collections::BTreeMap;
@@ -10,6 +11,7 @@ use strum_macros::EnumString;
 
 pub use self::builder::*;
 pub use self::diff::*;
+pub use self::load::*;
 pub use self::verify::*;
 
 #[derive(Copy, Clone, Debug, Deserialize, EnumString, PartialEq, Serialize)]

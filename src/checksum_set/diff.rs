@@ -1,6 +1,5 @@
-use std::collections::{BTreeMap, BTreeSet};
-
 use super::ChecksumSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 #[derive(Debug)]
 pub struct ChecksumSetDiff {

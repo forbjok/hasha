@@ -4,6 +4,14 @@ use super::UiHandler;
 pub struct CliUiHandler;
 
 impl UiHandler for CliUiHandler {
+    fn begin_load(&mut self, filename: &str) {
+        eprintln!("Loading checksum set '{}'...", filename);
+    }
+
+    fn end_load(&mut self) {
+        eprintln!("Checksum set loaded.");
+    }
+
     fn begin_generate(&mut self, _file_count: u32, _total_size: u64) {
         eprintln!("Generating checksum set...");
     }

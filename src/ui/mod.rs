@@ -2,6 +2,9 @@ pub mod cli;
 pub mod fancy;
 
 pub trait UiHandler {
+    fn begin_load(&mut self, filename: &str);
+    fn end_load(&mut self);
+
     fn begin_generate(&mut self, file_count: u32, total_size: u64);
     fn end_generate(&mut self);
 

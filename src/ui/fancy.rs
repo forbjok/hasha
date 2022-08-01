@@ -1,6 +1,10 @@
+use std::time::Duration;
+
 use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 
 use super::UiHandler;
+
+const LOAD_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
 
 const OVERALL_TEMPLATE: &str =
     " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} @ {bytes_per_sec}, ETA: {eta} {wide_msg:.blue}";
@@ -10,6 +14,9 @@ pub struct FancyUiHandler {
     multi_progress: MultiProgress,
     progress_chars: String,
 
+    loading_filename: Option<String>,
+
+    load_pb: Option<ProgressBar>,
     overall_pb: Option<ProgressBar>,
     file_pb: Option<ProgressBar>,
 }
@@ -20,6 +27,9 @@ impl FancyUiHandler {
             multi_progress: MultiProgress::new(),
             progress_chars: "●●·".to_owned(),
 
+            loading_filename: None,
+
+            load_pb: None,
             overall_pb: None,
             file_pb: None,
         }
@@ -33,6 +43,29 @@ impl FancyUiHandler {
 }
 
 impl UiHandler for FancyUiHandler {
+    fn begin_load(&mut self, filename: &str) {
+        let pb = ProgressBar::new_spinner()
+            .with_style(ProgressStyle::default_bar().template(LOAD_TEMPLATE).unwrap())
+            .with_message(format!("Loading checksum set '{}'...", filename));
+
+        let pb = self.multi_progress.add(pb);
+
+        pb.enable_steady_tick(Duration::from_millis(120));
+
+        self.loading_filename = Some(filename.to_owned());
+        self.load_pb = Some(pb);
+    }
+
+    fn end_load(&mut self) {
+        if let Some(pb) = self.load_pb.take() {
+            if let Some(filename) = self.loading_filename.take() {
+                pb.println(format!("Checksum set '{}' loaded.", filename));
+            }
+
+            pb.finish_and_clear();
+        }
+    }
+
     fn begin_generate(&mut self, _file_count: u32, total_size: u64) {
         let pb = ProgressBar::new(total_size)
             .with_style(

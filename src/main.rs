@@ -75,7 +75,7 @@ fn main() -> Result<(), anyhow::Error> {
         Command::Diff {
             checksums_a_path,
             checksums_b_path,
-        } => command::diff(&checksums_a_path, &checksums_b_path)?,
+        } => command::diff(&checksums_a_path, &checksums_b_path, &mut ui)?,
         Command::Verify {
             checksums_path,
             root_path,
