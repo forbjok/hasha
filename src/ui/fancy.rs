@@ -12,9 +12,10 @@ const OVERALL_TEMPLATE: &str =
     " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} @ {bytes_per_sec}, ETA: {eta} {wide_msg:.blue}";
 const FILE_TEMPLATE: &str = " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} {wide_msg:.blue}";
 
+const PROGRESS_CHARS: &str = "●●·";
+
 pub struct FancyUiHandler {
     multi_progress: MultiProgress,
-    progress_chars: String,
 
     loading_filename: Option<String>,
 
@@ -29,7 +30,6 @@ impl FancyUiHandler {
     pub fn new() -> Self {
         Self {
             multi_progress: MultiProgress::with_draw_target(ProgressDrawTarget::stderr_with_hz(5)),
-            progress_chars: "●●·".to_owned(),
 
             loading_filename: None,
 
@@ -115,7 +115,7 @@ impl UiHandler for FancyUiHandler {
                 ProgressStyle::default_bar()
                     .template(OVERALL_TEMPLATE)
                     .unwrap()
-                    .progress_chars(&self.progress_chars),
+                    .progress_chars(PROGRESS_CHARS),
             )
             .with_prefix("Overall")
             .with_message("Generating checksum set...");
@@ -138,7 +138,7 @@ impl UiHandler for FancyUiHandler {
                 ProgressStyle::default_bar()
                     .template(OVERALL_TEMPLATE)
                     .unwrap()
-                    .progress_chars(&self.progress_chars),
+                    .progress_chars(PROGRESS_CHARS),
             )
             .with_prefix("Overall")
             .with_message("Verifying...");
@@ -161,7 +161,7 @@ impl UiHandler for FancyUiHandler {
                 ProgressStyle::default_bar()
                     .template(FILE_TEMPLATE)
                     .unwrap()
-                    .progress_chars(&self.progress_chars),
+                    .progress_chars(PROGRESS_CHARS),
             )
             .with_prefix("File")
             .with_message(filename.to_owned());
