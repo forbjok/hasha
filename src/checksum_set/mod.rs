@@ -12,7 +12,7 @@ pub use self::builder::*;
 pub use self::diff::*;
 pub use self::verify::*;
 
-#[derive(Copy, Clone, Debug, Deserialize, EnumString, Serialize)]
+#[derive(Copy, Clone, Debug, Deserialize, EnumString, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase")]
 #[strum(serialize_all = "lowercase")]
 pub enum HashType {

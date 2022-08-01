@@ -10,7 +10,13 @@ pub struct ChecksumSetDiff {
 }
 
 impl ChecksumSet {
-    pub fn diff(&self, other: &ChecksumSet) -> ChecksumSetDiff {
+    pub fn diff(&self, other: &ChecksumSet) -> Result<ChecksumSetDiff, anyhow::Error> {
+        if other.hash_type != self.hash_type {
+            return Err(anyhow::anyhow!(
+                "Checksum sets have mismatching hash types. Comparison makes no sense."
+            ));
+        }
+
         let additional_files = self
             .files
             .keys()
@@ -31,11 +37,11 @@ impl ChecksumSet {
             }
         }
 
-        ChecksumSetDiff {
+        Ok(ChecksumSetDiff {
             additional_files,
             missing_files,
             differing_hashes,
-        }
+        })
     }
 }
 

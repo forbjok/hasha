@@ -17,7 +17,7 @@ pub fn diff(checksums_a_path: &Path, checksums_b_path: &Path) -> Result<(), anyh
         serde_json::from_reader(file).with_context(|| "Deserializing checksum set B")?
     };
 
-    let diff = checksums_a.diff(&checksums_b);
+    let diff = checksums_a.diff(&checksums_b)?;
 
     if diff.is_different() {
         diff.print();
