@@ -1,3 +1,5 @@
+use crate::ui::UiHandler;
+
 use super::ChecksumSet;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -9,12 +11,14 @@ pub struct ChecksumSetDiff {
 }
 
 impl ChecksumSet {
-    pub fn diff(&self, other: &ChecksumSet) -> Result<ChecksumSetDiff, anyhow::Error> {
+    pub fn diff(&self, other: &ChecksumSet, ui: &mut dyn UiHandler) -> Result<ChecksumSetDiff, anyhow::Error> {
         if other.hash_type != self.hash_type {
             return Err(anyhow::anyhow!(
                 "Checksum sets have mismatching hash types. Comparison makes no sense."
             ));
         }
+
+        ui.begin_diff();
 
         let additional_files = self
             .files
@@ -35,6 +39,8 @@ impl ChecksumSet {
                 missing_files.insert(path.into());
             }
         }
+
+        ui.end_diff();
 
         Ok(ChecksumSetDiff {
             additional_files,

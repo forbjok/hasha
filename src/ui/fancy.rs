@@ -5,6 +5,7 @@ use indicatif::{MultiProgress, ProgressBar, ProgressStyle};
 use super::UiHandler;
 
 const LOAD_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
+const DIFF_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
 
 const OVERALL_TEMPLATE: &str =
     " {prefix:>8} [{bar:40.cyan/blue}] {bytes}/{total_bytes} @ {bytes_per_sec}, ETA: {eta} {wide_msg:.blue}";
@@ -17,6 +18,7 @@ pub struct FancyUiHandler {
     loading_filename: Option<String>,
 
     load_pb: Option<ProgressBar>,
+    diff_pb: Option<ProgressBar>,
     overall_pb: Option<ProgressBar>,
     file_pb: Option<ProgressBar>,
 }
@@ -30,6 +32,7 @@ impl FancyUiHandler {
             loading_filename: None,
 
             load_pb: None,
+            diff_pb: None,
             overall_pb: None,
             file_pb: None,
         }
@@ -62,6 +65,25 @@ impl UiHandler for FancyUiHandler {
                 pb.println(format!("Checksum set '{}' loaded.", filename));
             }
 
+            pb.finish_and_clear();
+        }
+    }
+
+    fn begin_diff(&mut self) {
+        let pb = ProgressBar::new_spinner()
+            .with_style(ProgressStyle::default_bar().template(DIFF_TEMPLATE).unwrap())
+            .with_message("Comparing...");
+
+        let pb = self.multi_progress.add(pb);
+
+        pb.enable_steady_tick(Duration::from_millis(120));
+
+        self.diff_pb = Some(pb);
+    }
+
+    fn end_diff(&mut self) {
+        if let Some(pb) = self.diff_pb.take() {
+            pb.println("Comparison finished.");
             pb.finish_and_clear();
         }
     }

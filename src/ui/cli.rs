@@ -12,6 +12,14 @@ impl UiHandler for CliUiHandler {
         eprintln!("Checksum set loaded.");
     }
 
+    fn begin_diff(&mut self) {
+        eprintln!("Comparing checksum sets...");
+    }
+
+    fn end_diff(&mut self) {
+        eprintln!("Comparison finished.");
+    }
+
     fn begin_generate(&mut self, _file_count: u32, _total_size: u64) {
         eprintln!("Generating checksum set...");
     }
