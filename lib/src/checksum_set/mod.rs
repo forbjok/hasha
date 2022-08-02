@@ -3,6 +3,7 @@ mod diff;
 mod hasher;
 mod load;
 mod verify;
+mod write;
 
 use std::collections::BTreeMap;
 
@@ -13,6 +14,7 @@ pub use self::builder::*;
 pub use self::diff::*;
 pub use self::load::*;
 pub use self::verify::*;
+pub use self::write::*;
 
 #[derive(Copy, Clone, Debug, Deserialize, EnumString, PartialEq, Serialize)]
 #[serde(rename_all = "lowercase")]

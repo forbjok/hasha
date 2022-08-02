@@ -1,4 +1,4 @@
-use super::UiHandler;
+use hasha::ui::UiHandler;
 
 #[derive(Default)]
 pub struct CliUiHandler;

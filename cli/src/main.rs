@@ -1,13 +1,11 @@
 use std::path::PathBuf;
 
-use checksum_set::HashType;
 use clap::Parser;
 
-mod checksum_set;
 mod command;
 mod ui;
-mod util;
 
+use hasha::checksum_set::HashType;
 use tracing::debug;
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 

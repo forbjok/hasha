@@ -1,6 +1,3 @@
-pub mod cli;
-pub mod fancy;
-
 pub trait UiHandler {
     fn begin_load(&mut self, filename: &str);
     fn end_load(&mut self);

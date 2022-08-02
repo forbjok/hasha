@@ -1,8 +1,8 @@
-use std::{fs, path::Path, time::Instant};
+use std::{path::Path, time::Instant};
 
 use anyhow::Context;
 
-use crate::{
+use hasha::{
     checksum_set::{ChecksumSetBuilder, HashType},
     ui::UiHandler,
     util,
@@ -35,10 +35,7 @@ pub fn generate(
 
     eprintln!("Operation took {}.", util::humanize_duration(now.elapsed()));
 
-    let file =
-        fs::File::create(&output_file).with_context(|| format!("Creating output file: {}", output_file.display()))?;
-    serde_json::to_writer_pretty(file, &checksum_set)
-        .with_context(|| format!("Writing to output file: {}", output_file.display()))?;
+    checksum_set.write_file(&output_file)?;
 
     Ok(())
 }
