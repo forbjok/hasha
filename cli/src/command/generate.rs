@@ -1,4 +1,4 @@
-use std::{path::Path, time::Instant};
+use std::{borrow::Cow, path::Path, time::Instant};
 
 use anyhow::Context;
 
@@ -18,13 +18,15 @@ pub fn generate(
     let hash_type = hash_type.unwrap_or(HashType::Sha256);
     let path = util::normalize_path(path);
 
-    let output_file = output_file.map(|p| p.to_path_buf()).unwrap_or_else(|| {
-        path.file_name()
-            .map(|n| path.with_file_name(format!("{}.kecs.json", n.to_string_lossy())))
-            .unwrap_or_else(|| "kecs.json".into())
-    });
+    let output_file: Cow<Path> = output_file
+        .map(Cow::Borrowed)
+        .or_else(|| {
+            path.file_name()
+                .map(|n| Cow::Owned(path.with_file_name(format!("{}.kecs.json", n.to_string_lossy()))))
+        })
+        .with_context(|| "Could not determine output file path.")?;
 
-    let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path));
+    let root_path = root_path.or_else(|| path.parent()).unwrap_or(&path);
 
     let now = Instant::now();
 
