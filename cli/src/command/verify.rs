@@ -2,7 +2,7 @@ use std::{path::Path, time::Instant};
 
 use anyhow::Context;
 
-use hasha::{checksum_set::ChecksumSet, ui::UiHandler, util};
+use kecs::{checksum_set::ChecksumSet, ui::UiHandler, util};
 
 pub fn verify(checksums_path: &Path, root_path: Option<&Path>, ui: &mut dyn UiHandler) -> Result<(), anyhow::Error> {
     let root_path = root_path.unwrap_or_else(|| checksums_path.parent().unwrap());

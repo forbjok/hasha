@@ -5,14 +5,14 @@ use clap::Parser;
 mod command;
 mod ui;
 
-use hasha::checksum_set::HashType;
+use kecs::checksum_set::HashType;
 use tracing::debug;
 use tracing_subscriber::{EnvFilter, FmtSubscriber};
 
 use crate::ui::fancy::FancyUiHandler;
 
 #[derive(Debug, Parser)]
-#[clap(name = "Hasha", version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"))]
+#[clap(name = "KeCS", version = env!("CARGO_PKG_VERSION"), author = env!("CARGO_PKG_AUTHORS"))]
 struct Opt {
     #[clap(subcommand)]
     command: Command,

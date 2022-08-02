@@ -2,7 +2,7 @@ use std::{path::Path, time::Instant};
 
 use anyhow::Context;
 
-use hasha::{
+use kecs::{
     checksum_set::{ChecksumSetBuilder, HashType},
     ui::UiHandler,
     util,

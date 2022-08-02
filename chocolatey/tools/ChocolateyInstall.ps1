@@ -1,11 +1,11 @@
 $toolsPath = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
-$packageName = 'hasha'
+$packageName = 'kecs'
 $version = Get-Content -Path "$toolsPath\VERSION.txt" -Encoding utf8
-$url = "https://github.com/forbjok/hasha/releases/download/v$version/hasha-$version-windows-i686.zip"
-$url64 = "https://github.com/forbjok/hasha/releases/download/v$version/hasha-$version-windows-x86_64.zip"
-$checksum = Get-Content -Path "$toolsPath\hasha-$version-windows-i686.zip.sha256.txt" -Encoding utf8
-$checksum64 = Get-Content -Path "$toolsPath\hasha-$version-windows-x86_64.zip.sha256.txt" -Encoding utf8
+$url = "https://github.com/forbjok/kecs/releases/download/v$version/kecs-$version-windows-i686.zip"
+$url64 = "https://github.com/forbjok/kecs/releases/download/v$version/kecs-$version-windows-x86_64.zip"
+$checksum = Get-Content -Path "$toolsPath\kecs-$version-windows-i686.zip.sha256.txt" -Encoding utf8
+$checksum64 = Get-Content -Path "$toolsPath\kecs-$version-windows-x86_64.zip.sha256.txt" -Encoding utf8
 $unzipLocation = $toolsPath
 
 $packageArgs = @{

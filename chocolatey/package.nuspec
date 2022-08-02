@@ -3,26 +3,26 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <!-- Read this before publishing packages to chocolatey.org: https://github.com/chocolatey/chocolatey/wiki/CreatePackages -->
-    <id>hasha</id>
-    <title>Hasha</title>
+    <id>kecs</id>
+    <title>kecs</title>
     <version>$version$</version>
     <authors>Kjartan F. Kvamme</authors>
     <owners>Kjartan F. Kvamme</owners>
     <summary>Tool to generate checksum sets and use those to validate or compare the contents of a directory.</summary>
     <description>Tool to generate checksum sets and use those to validate or compare the contents of a directory.</description>
-    <projectUrl>https://github.com/forbjok/hasha.git</projectUrl>
-    <packageSourceUrl>https://github.com/forbjok/hasha.git</packageSourceUrl>
-    <projectSourceUrl>https://github.com/forbjok/hasha.git</projectSourceUrl>
-    <docsUrl>https://github.com/forbjok/hasha.git</docsUrl>
-    <bugTrackerUrl>https://github.com/forbjok/hasha.git/issues</bugTrackerUrl>
+    <projectUrl>https://github.com/forbjok/kecs.git</projectUrl>
+    <packageSourceUrl>https://github.com/forbjok/kecs.git</packageSourceUrl>
+    <projectSourceUrl>https://github.com/forbjok/kecs.git</projectSourceUrl>
+    <docsUrl>https://github.com/forbjok/kecs.git</docsUrl>
+    <bugTrackerUrl>https://github.com/forbjok/kecs.git/issues</bugTrackerUrl>
     <tags>checksum hash generate verify compare diff</tags>
-    <licenseUrl>https://github.com/forbjok/hasha.git/blob/master/LICENSE-MIT</licenseUrl>
+    <licenseUrl>https://github.com/forbjok/kecs.git/blob/master/LICENSE-MIT</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
   </metadata>
   <files>
     <file src="tools\*" target="tools" />
     <file src="..\dist\VERSION.txt" target="tools" />
-    <file src="..\dist\hasha-$version$-windows-i686.zip.sha256.txt" target="tools" />
-    <file src="..\dist\hasha-$version$-windows-x86_64.zip.sha256.txt" target="tools" />
+    <file src="..\dist\kecs-$version$-windows-i686.zip.sha256.txt" target="tools" />
+    <file src="..\dist\kecs-$version$-windows-x86_64.zip.sha256.txt" target="tools" />
   </files>
 </package>

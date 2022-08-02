@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use hasha::ui::UiHandler;
 use indicatif::{MultiProgress, ProgressBar, ProgressDrawTarget, ProgressStyle};
+use kecs::ui::UiHandler;
 
 const LOAD_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";
 const DIFF_TEMPLATE: &str = " {spinner:.blue} {wide_msg:.blue}";

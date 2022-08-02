@@ -1,9 +1,9 @@
 [package]
-name = "hasha"
+name = "kecs"
 version = "0.1.0"
 edition = "2021"
 license = "MIT/Apache-2.0"
-repository = "https://github.com/forbjok/hasha.git"
+repository = "https://github.com/forbjok/kecs.git"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

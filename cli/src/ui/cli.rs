@@ -1,4 +1,4 @@
-use hasha::ui::UiHandler;
+use kecs::ui::UiHandler;
 
 #[derive(Default)]
 pub struct CliUiHandler;

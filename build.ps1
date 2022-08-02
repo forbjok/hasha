@@ -20,7 +20,7 @@ function Remove-Dir([string] $Path) {
 $root = $PSScriptRoot
 $distPath = "$root\dist"
 $stagingRoot = "$root\staging"
-$executableName = "hasha"
+$executableName = "kecs"
 
 # Get full version string
 $version = (Get-Content "version.json" | ConvertFrom-Json).FullVersion
