@@ -26,7 +26,7 @@ impl ChecksumSetBuilder {
     pub fn new(hash_type: HashType, root_path: &Path) -> Self {
         Self {
             hash_type,
-            root_path: root_path.into(),
+            root_path: util::normalize_path(root_path),
             files: Vec::new(),
         }
     }
