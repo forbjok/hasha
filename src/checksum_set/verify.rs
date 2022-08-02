@@ -11,6 +11,8 @@ impl ChecksumSet {
     pub fn verify(&self, root_path: &Path, ui: &mut dyn UiHandler) -> Result<ChecksumSetDiff, anyhow::Error> {
         let hash_type = self.hash_type;
 
+        ui.begin_prepare();
+
         let files: Vec<_> = self
             .files
             .iter()
@@ -26,6 +28,7 @@ impl ChecksumSet {
             .map(|(_, path, _)| std::fs::metadata(path).map(|m| m.len()).unwrap_or(0))
             .sum();
 
+        ui.end_prepare();
         ui.begin_verify(files.len() as u32, total_size);
 
         let mut missing_files: BTreeSet<String> = Default::default();

@@ -24,9 +24,13 @@ impl UiHandler for CliUiHandler {
         eprintln!("Scanning directory content...");
     }
 
-    fn end_scan(&mut self) {
-        eprintln!("Scanning finished.");
+    fn end_scan(&mut self) {}
+
+    fn begin_prepare(&mut self) {
+        eprintln!("Preparing...");
     }
+
+    fn end_prepare(&mut self) {}
 
     fn begin_generate(&mut self, _file_count: u32, _total_size: u64) {
         eprintln!("Generating checksum set...");
