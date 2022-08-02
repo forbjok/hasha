@@ -20,8 +20,8 @@ pub fn generate(
 
     let output_file = output_file.map(|p| p.to_path_buf()).unwrap_or_else(|| {
         path.file_name()
-            .map(|n| path.with_file_name(format!("{}.checksums.json", n.to_string_lossy())))
-            .unwrap_or_else(|| "checksums.json".into())
+            .map(|n| path.with_file_name(format!("{}.kecs.json", n.to_string_lossy())))
+            .unwrap_or_else(|| "kecs.json".into())
     });
 
     let root_path = root_path.unwrap_or_else(|| path.parent().unwrap_or(&path));

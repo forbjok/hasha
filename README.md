@@ -40,11 +40,11 @@ $ kecs generate <path/to/content> -t blake3
 ## Verifying using a checksum set
 
 ```
-$ kecs verify <path/to/file.checksums.json>
+$ kecs verify <path/to/file.kecs.json>
 ```
 
 ## Comparing two checksum sets
 
 ```
-$ kecs diff <path/to/file1.checksums.json> <path/to/file2.checksums.json>
+$ kecs diff <path/to/file1.kecs.json> <path/to/file2.kecs.json>
 ```
