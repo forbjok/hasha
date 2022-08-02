@@ -7,14 +7,19 @@ use tracing::warn;
 
 use crate::{ui::UiHandler, util};
 
-use super::{ChecksumSet, HashType};
+use super::{ChecksumSet, FileInfo, HashType};
+
+#[derive(Debug)]
+struct BuilderFileInfo {
+    pub path: PathBuf,
+    pub size: u64,
+}
 
 #[derive(Debug)]
 pub struct ChecksumSetBuilder {
     hash_type: HashType,
     root_path: PathBuf,
-    files: Vec<PathBuf>,
-    total_size: u64,
+    files: Vec<BuilderFileInfo>,
 }
 
 impl ChecksumSetBuilder {
@@ -23,7 +28,6 @@ impl ChecksumSetBuilder {
             hash_type,
             root_path: root_path.into(),
             files: Vec::new(),
-            total_size: 0,
         }
     }
 
@@ -31,8 +35,7 @@ impl ChecksumSetBuilder {
         let path = util::normalize_path(path);
         let size = std::fs::metadata(&path).map(|m| m.len()).unwrap_or(0);
 
-        self.files.push(path);
-        self.total_size += size;
+        self.files.push(BuilderFileInfo { path, size });
     }
 
     pub fn add_path<P: AsRef<Path>>(&mut self, path: P, ui: &mut dyn UiHandler) -> &mut Self {
@@ -57,18 +60,30 @@ impl ChecksumSetBuilder {
         let hash_type = self.hash_type;
         let root_path = &self.root_path;
 
-        let mut files: BTreeMap<String, String> = BTreeMap::new();
+        let mut files: BTreeMap<String, FileInfo> = BTreeMap::new();
 
-        ui.begin_generate(self.files.len() as u32, self.total_size);
+        ui.begin_prepare();
 
-        for path in self.files.iter() {
+        let total_size: u64 = self
+            .files
+            .iter()
+            .map(|fi| std::fs::metadata(&fi.path).map(|m| m.len()).unwrap_or(0))
+            .sum();
+
+        ui.end_prepare();
+
+        ui.begin_generate(self.files.len() as u32, total_size);
+
+        for BuilderFileInfo { path, size } in self.files.iter() {
             // Make path relative, as we only want to match on the path
             // relative to the root.
             if let Ok(rel_path) = path.strip_prefix(&root_path) {
                 let hash = hash_type.hash_file(path, ui)?;
 
                 let rel_path = util::unixify_path(rel_path);
-                files.insert(rel_path, hash);
+                let size = *size;
+
+                files.insert(rel_path, FileInfo { hash, size });
             } else {
                 warn!("'{}' is outside the root path. Skipping.", path.display());
             }

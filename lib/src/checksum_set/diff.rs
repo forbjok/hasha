@@ -7,6 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 pub struct ChecksumSetDiff {
     pub additional_files: BTreeSet<String>,
     pub missing_files: BTreeSet<String>,
+    pub differing_sizes: BTreeMap<String, (u64, u64)>,
     pub differing_hashes: BTreeMap<String, (String, String)>,
 }
 
@@ -28,12 +29,15 @@ impl ChecksumSet {
             .collect();
 
         let mut missing_files: BTreeSet<String> = BTreeSet::new();
+        let mut differing_sizes: BTreeMap<String, (u64, u64)> = BTreeMap::new();
         let mut differing_hashes: BTreeMap<String, (String, String)> = BTreeMap::new();
 
-        for (path, other_hash) in other.files.iter() {
-            if let Some(hash) = self.files.get(path) {
-                if other_hash != hash {
-                    differing_hashes.insert(path.into(), (hash.clone(), other_hash.clone()));
+        for (path, other_fi) in other.files.iter() {
+            if let Some(fi) = self.files.get(path) {
+                if other_fi.size != fi.size {
+                    differing_sizes.insert(path.into(), (fi.size, other_fi.size));
+                } else if other_fi.hash != fi.hash {
+                    differing_hashes.insert(path.into(), (fi.hash.clone(), other_fi.hash.clone()));
                 }
             } else {
                 missing_files.insert(path.into());
@@ -45,6 +49,7 @@ impl ChecksumSet {
         Ok(ChecksumSetDiff {
             additional_files,
             missing_files,
+            differing_sizes,
             differing_hashes,
         })
     }
@@ -52,7 +57,10 @@ impl ChecksumSet {
 
 impl ChecksumSetDiff {
     pub fn is_different(&self) -> bool {
-        !self.additional_files.is_empty() || !self.missing_files.is_empty() || !self.differing_hashes.is_empty()
+        !self.additional_files.is_empty()
+            || !self.missing_files.is_empty()
+            || !self.differing_sizes.is_empty()
+            || !self.differing_hashes.is_empty()
     }
 
     pub fn print(&self) {
@@ -82,6 +90,18 @@ impl ChecksumSetDiff {
             println!();
 
             summary.push(format!("{} missing files.", self.missing_files.len()));
+        }
+
+        if !self.differing_sizes.is_empty() {
+            println!("-- DIFFERING SIZES --");
+
+            for (p, (a, b)) in self.differing_sizes.iter() {
+                println!("{} == A: {} / B: {}", p, a, b);
+            }
+
+            println!();
+
+            summary.push(format!("{} differing sizes.", self.differing_sizes.len()));
         }
 
         if !self.differing_hashes.is_empty() {

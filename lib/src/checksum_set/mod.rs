@@ -31,7 +31,13 @@ pub enum HashType {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+pub struct FileInfo {
+    pub size: u64,
+    pub hash: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ChecksumSet {
     pub hash_type: HashType,
-    pub files: BTreeMap<String, String>,
+    pub files: BTreeMap<String, FileInfo>,
 }
