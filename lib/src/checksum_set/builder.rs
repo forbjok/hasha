@@ -77,7 +77,7 @@ impl ChecksumSetBuilder {
         for BuilderFileInfo { path, size } in self.files.iter() {
             // Make path relative, as we only want to match on the path
             // relative to the root.
-            if let Ok(rel_path) = path.strip_prefix(&root_path) {
+            if let Ok(rel_path) = path.strip_prefix(root_path) {
                 let hash = hash_type.hash_file(path, ui)?;
 
                 let rel_path = util::unixify_path(rel_path);
